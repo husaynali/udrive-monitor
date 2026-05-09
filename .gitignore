@@ -1,0 +1,4 @@
+data/qa_platform.db
+__pycache__/
+*.pyc
+.env
