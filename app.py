@@ -1,6 +1,7 @@
 """
 QA Evaluation, Coaching & Performance Management Platform
 Main Application Entry Point — Production (SQLite-backed)
+Redesigned with U-Drive Enterprise UI
 """
 
 import streamlit as st
@@ -8,14 +9,15 @@ from config.settings import APP_CONFIG
 from utils.database import init_db
 from utils.auth import init_session, require_auth
 from utils.theme import inject_global_styles
-from components.sidebar import render_sidebar
+from components.topnav import render_topnav, render_topnav_end, get_navigation_items
+from utils.auth import current_user, logout
 
 # ── Page config ──────────────────────────────────────────────────────────────
 st.set_page_config(
-    page_title="QA Pro — Performance Management Platform",
-    page_icon="🎯",
+    page_title="UDrive Monitor — Performance Management Platform",
+    page_icon="📊",
     layout="wide",
-    initial_sidebar_state="expanded",
+    initial_sidebar_state="collapsed",
 )
 
 inject_global_styles()
@@ -36,8 +38,25 @@ def main():
         render_login()
         return
 
-    page = render_sidebar()
+    # Get user and role for navigation
+    user = current_user()
+    role = user.get("role", "viewer")
+    nav_items = get_navigation_items(role)
+    
+    # Flatten navigation items
+    all_items = []
+    for group_name, group_items in nav_items:
+        all_items.extend(group_items)
+    
+    # Get current page
+    current = st.session_state.get("current_page", "Executive Dashboard")
+    
+    # Render the top navigation
+    render_topnav()
 
+    # Now route to the selected page
+    page = current
+    
     if page == "Executive Dashboard":
         from pages.dashboard_executive import render
     elif page == "QA Insights":
@@ -70,6 +89,7 @@ def main():
         from pages.dashboard_executive import render
 
     render()
+    render_topnav_end()
 
 
 if __name__ == "__main__":

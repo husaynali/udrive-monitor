@@ -1,12 +1,13 @@
 """
 Reports & Export Center
+Redesigned with U-Drive Enterprise UI
 """
 
 import streamlit as st
 import pandas as pd
 import io
 from datetime import date
-from utils.theme import section_header
+from utils.theme import section_header, chart_container, chart_container_end
 
 
 def render():
@@ -42,11 +43,19 @@ def render():
             pr    = filtered["passed"].sum() / total * 100 if total else 0
             nogo  = filtered["no_go_violation"].notna().sum()
 
-            m1, m2, m3, m4 = st.columns(4)
-            m1.metric("Total Evaluations", total)
-            m2.metric("Avg QA Score",      f"{avg:.1f}%")
-            m3.metric("Pass Rate",         f"{pr:.1f}%")
-            m4.metric("No-Go Count",       nogo)
+            # KPI metrics
+            from utils.theme import kpi_card
+            m_cols = st.columns(4)
+            with m_cols[0]:
+                kpi_card("Total Evaluations", str(total), "", "#7C3AED", "📋")
+            with m_cols[1]:
+                kpi_card("Avg QA Score", f"{avg:.1f}%", "", "#10B981", "📊")
+            with m_cols[2]:
+                kpi_card("Pass Rate", f"{pr:.1f}%", "", "#22C55E", "✅")
+            with m_cols[3]:
+                kpi_card("No-Go Count", str(nogo), "", "#EF4444", "🚨")
+
+            st.markdown("---")
 
             if group_by == "Team":
                 summary = filtered.groupby("team_lead").agg(
@@ -79,21 +88,82 @@ def render():
                 display["Date"]   = display["Date"].dt.strftime("%Y-%m-%d")
                 st.dataframe(display, use_container_width=True, hide_index=True)
 
-            # Export
-            col_dl1, col_dl2 = st.columns(2)
-            csv_data = filtered.drop(columns=["scores"], errors="ignore").to_csv(index=False).encode("utf-8")
-            col_dl1.download_button("⬇️ Download CSV", csv_data, f"qa_report_{date.today()}.csv", "text/csv")
+            # Export - Fixed: Proper tabular format
+            st.markdown("### Export Data")
+            
+            export_col1, export_col2 = st.columns(2)
+            
+            # CSV Export with proper formatting
+            export_df = filtered.drop(columns=["scores"], errors="ignore").copy()
+            # Clean up the data for export
+            export_df["call_date"] = export_df["call_date"].dt.strftime("%Y-%m-%d")
+            export_df["total_score"] = export_df["total_score"].round(2)
+            export_df["passed"] = export_df["passed"].map({True: "PASS", False: "FAIL"})
+            export_df["no_go_violation"] = export_df["no_go_violation"].fillna("")
+            
+            csv_data = export_df.to_csv(index=False).encode("utf-8-sig")  # Add BOM for Excel UTF-8
+            
+            with export_col1:
+                st.download_button(
+                    "⬇️ Download CSV",
+                    csv_data,
+                    f"qa_report_{date.today()}.csv",
+                    "text/csv;charset=utf-8-sig",
+                    use_container_width=True
+                )
 
-            # Excel export
-            excel_buf = io.BytesIO()
-            with pd.ExcelWriter(excel_buf, engine="openpyxl") as writer:
-                filtered.drop(columns=["scores"], errors="ignore").to_excel(writer, sheet_name="QA Report", index=False)
-            col_dl2.download_button(
-                "⬇️ Download Excel",
-                data=excel_buf.getvalue(),
-                file_name=f"qa_report_{date.today()}.xlsx",
-                mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-            )
+            # Excel Export with proper formatting
+            with export_col2:
+                excel_buf = io.BytesIO()
+                with pd.ExcelWriter(excel_buf, engine="openpyxl") as writer:
+                    # Write the dataframe to Excel
+                    export_df.to_excel(writer, sheet_name="QA Report", index=False, startrow=0)
+                    
+                    # Get the workbook to format headers
+                    workbook = writer.book
+                    worksheet = writer.sheets["QA Report"]
+                    
+                    # Format header row
+                    from openpyxl.styles import Font, PatternFill, Alignment, Border, Side
+                    
+                    header_font = Font(bold=True, color="FFFFFF")
+                    header_fill = PatternFill(start_color="7C3AED", end_color="7C3AED", fill_type="solid")
+                    header_alignment = Alignment(horizontal="center", vertical="center")
+                    thin_border = Border(
+                        left=Side(style='thin'),
+                        right=Side(style='thin'),
+                        top=Side(style='thin'),
+                        bottom=Side(style='thin')
+                    )
+                    
+                    # Apply header formatting
+                    for cell in worksheet[1]:
+                        cell.font = header_font
+                        cell.fill = header_fill
+                        cell.alignment = header_alignment
+                        cell.border = thin_border
+                    
+                    # Auto-fit column widths
+                    for column in worksheet.columns:
+                        max_length = 0
+                        column_letter = column[0].column_letter
+                        for cell in column:
+                            try:
+                                if len(str(cell.value)) > max_length:
+                                    max_length = len(str(cell.value))
+                            except:
+                                pass
+                        adjusted_width = min(max_length + 2, 50)
+                        worksheet.column_dimensions[column_letter].width = adjusted_width
+                
+                excel_data = excel_buf.getvalue()
+                st.download_button(
+                    "⬇️ Download Excel",
+                    excel_data,
+                    f"qa_report_{date.today()}.xlsx",
+                    "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                    use_container_width=True
+                )
 
     # ── Coaching Report ────────────────────────────────────────────────────
     with tabs[1]:
@@ -106,20 +176,31 @@ def render():
             comp_s  = (sdf["completion_status"] == "Completed").sum()
             rate_s  = comp_s / total_s * 100 if total_s else 0
 
-            m1, m2, m3 = st.columns(3)
-            m1.metric("Total Sessions", total_s)
-            m2.metric("Completed",      comp_s)
-            m3.metric("Completion Rate",f"{rate_s:.1f}%")
+            coach_cols = st.columns(3)
+            with coach_cols[0]:
+                kpi_card("Total Sessions", str(total_s), "", "#7C3AED", "🎓")
+            with coach_cols[1]:
+                kpi_card("Completed", str(comp_s), "", "#10B981", "✅")
+            with coach_cols[2]:
+                kpi_card("Completion Rate", f"{rate_s:.1f}%", "", "#22C55E", "📊")
+
+            st.markdown("---")
 
             display_s = sdf[[
                 "id","advisor_name","coaching_date","coaching_type","completion_status","qa_score","coach_name"
             ]].copy()
             display_s.columns = ["ID","Agent","Date","Type","Status","QA Score","Coach"]
-            display_s["QA Score"] = display_s["QA Score"].apply(lambda x: f"{float(x):.0f}%")
+            display_s["QA Score"] = display_s["QA Score"].apply(lambda x: f"{float(x):.0f}%" if pd.notna(x) else "—")
+            display_s["Date"] = pd.to_datetime(display_s["Date"]).dt.strftime("%Y-%m-%d")
             st.dataframe(display_s, use_container_width=True, hide_index=True)
 
-            csv_s = display_s.to_csv(index=False).encode("utf-8")
-            st.download_button("⬇️ Download CSV", csv_s, f"coaching_report_{date.today()}.csv", "text/csv")
+            # Export CSV
+            export_s = sdf.copy()
+            export_s["coaching_date"] = pd.to_datetime(export_s["coaching_date"]).dt.strftime("%Y-%m-%d")
+            export_s["qa_score"] = export_s["qa_score"].apply(lambda x: f"{x:.1f}" if pd.notna(x) else "")
+            
+            csv_s = export_s.to_csv(index=False).encode("utf-8-sig")
+            st.download_button("⬇️ Download CSV", csv_s, f"coaching_report_{date.today()}.csv", "text/csv;charset=utf-8-sig")
 
     # ── Agent Performance Report ───────────────────────────────────────────
     with tabs[2]:
@@ -143,8 +224,10 @@ def render():
             perf["Avg_Score"] = perf["Avg_Score"].apply(lambda x: f"{x:.1f}%")
             st.dataframe(perf, use_container_width=True, hide_index=True)
 
-            csv_p = perf.to_csv(index=False).encode("utf-8")
-            st.download_button("⬇️ Download CSV", csv_p, f"agent_performance_{date.today()}.csv", "text/csv")
+            export_p = perf.copy()
+            export_p["Avg_Score"] = export_p["Avg_Score"].str.replace("%", "").astype(float)
+            csv_p = export_p.to_csv(index=False).encode("utf-8-sig")
+            st.download_button("⬇️ Download CSV", csv_p, f"agent_performance_{date.today()}.csv", "text/csv;charset=utf-8-sig")
 
     # ── Compliance Report ──────────────────────────────────────────────────
     with tabs[3]:
@@ -157,11 +240,14 @@ def render():
                 "id","advisor_name","call_date","no_go_violation","team_lead","qa_evaluator"
             ]].copy()
             nogo_df.columns = ["Eval ID","Agent","Date","Violation","Team Lead","Evaluator"]
+            nogo_df["Date"] = pd.to_datetime(nogo_df["Date"]).dt.strftime("%Y-%m-%d")
 
             if nogo_df.empty:
                 st.success("🎉 No No-Go violations in the system!")
             else:
                 st.error(f"⚠️ {len(nogo_df)} No-Go violation(s) on record")
                 st.dataframe(nogo_df, use_container_width=True, hide_index=True)
-                csv_c = nogo_df.to_csv(index=False).encode("utf-8")
-                st.download_button("⬇️ Download CSV", csv_c, f"compliance_report_{date.today()}.csv", "text/csv")
+                
+                export_c = nogo_df.copy()
+                csv_c = export_c.to_csv(index=False).encode("utf-8-sig")
+                st.download_button("⬇️ Download CSV", csv_c, f"compliance_report_{date.today()}.csv", "text/csv;charset=utf-8-sig")
