@@ -1,93 +1,71 @@
 """
 Application Configuration & Constants
+UDrive Quality Monitoring Platform
 """
 
 APP_CONFIG = {
-    "name": "QA Pro Platform",
+    "name": "UDrive Monitor",
     "version": "2.0.0",
-    "company": "U-Drive Design",
+    "company": "U-Drive",
     "qa_pass_threshold": 75,
     "coaching_required_threshold": 70,
     "high_risk_threshold": 60,
 }
 
 ROLES = {
-    "super_admin": {
-        "label": "Super Admin",
-        "color": "#FF4B6E",
-        "pages": "all",
-    },
-    "qa_admin": {
-        "label": "QA Admin",
-        "color": "#F97316",
-        "pages": ["dashboard_*", "evaluation_*", "evaluations_*", "reports", "admin_*", "audit_logs"],
-    },
-    "qa_evaluator": {
-        "label": "QA Evaluator",
-        "color": "#EAB308",
-        "pages": ["dashboard_executive", "dashboard_qa", "evaluation_form", "evaluations_list", "reports"],
-    },
-    "team_leader": {
-        "label": "Team Leader",
-        "color": "#22C55E",
-        "pages": ["dashboard_executive", "dashboard_qa", "dashboard_coaching", "dashboard_agent",
-                  "evaluations_list", "coaching_form", "coaching_list", "reports"],
-    },
-    "coach": {
-        "label": "Coach",
-        "color": "#06B6D4",
-        "pages": ["coaching_form", "coaching_list", "dashboard_coaching", "reports"],
-    },
-    "ops_manager": {
-        "label": "Operations Manager",
-        "color": "#8B5CF6",
-        "pages": ["dashboard_*", "evaluations_list", "coaching_list", "reports"],
-    },
-    "agent": {
-        "label": "Agent",
-        "color": "#64748B",
-        "pages": ["dashboard_agent"],
-    },
-    "viewer": {
-        "label": "Read-Only Viewer",
-        "color": "#94A3B8",
-        "pages": ["dashboard_*", "reports"],
-    },
+    "super_admin": {"label": "Super Admin", "color": "#00D4FF", "pages": "all"},
+    "qa_admin": {"label": "QA Admin", "color": "#8B5CF6", "pages": ["dashboard_*", "evaluation_*", "evaluations_*", "reports", "admin_*", "audit_logs"]},
+    "qa_evaluator": {"label": "QA Evaluator", "color": "#10B981", "pages": ["dashboard_executive", "dashboard_qa", "evaluation_form", "evaluations_list", "reports"]},
+    "team_leader": {"label": "Team Leader", "color": "#F59E0B", "pages": ["dashboard_executive", "dashboard_qa", "dashboard_coaching", "dashboard_agent", "evaluations_list", "coaching_form", "coaching_list", "reports"]},
+    "coach": {"label": "Coach", "color": "#06B6D4", "pages": ["coaching_form", "coaching_list", "dashboard_coaching", "reports"]},
+    "ops_manager": {"label": "Operations Manager", "color": "#EC4899", "pages": ["dashboard_*", "evaluations_list", "coaching_list", "reports"]},
+    "agent": {"label": "Agent", "color": "#64748B", "pages": ["dashboard_agent"]},
+    "viewer": {"label": "Read-Only Viewer", "color": "#94A3B8", "pages": ["dashboard_*", "reports"]},
 }
 
+# UDrive-specific departments (ride-sharing platform)
 DEPARTMENTS = [
-    "Customer Support", "Technical Support", "Billing & Payments",
-    "Retention", "Sales", "Operations", "Back Office", "Compliance",
+    "Driver Operations", "Rider Support", "Technical Support", 
+    "Billing & Payments", "Safety & Compliance", "Sales", 
+    "Operations", "Back Office", "Customer Experience",
 ]
 
+# UDrive-specific audit types
 AUDIT_TYPES = [
-    "Live Monitoring", "Call Recording", "Email Audit",
-    "Chat Audit", "Screen Recording", "Mystery Shopper",
+    "Live Monitoring", "Call Recording", "Chat Audit", 
+    "Email Audit", "Screen Recording", "In-App Support", 
+    "Emergency Calls", "Mystery Shopper",
 ]
 
+# UDrive-specific topics
 TOPICS = {
-    "Account Management": ["Password Reset", "Profile Update", "Account Closure", "Verification Issues"],
-    "Billing & Payments": ["Charge Dispute", "Refund Request", "Payment Methods", "Invoice Queries"],
-    "Technical Support": ["App Issues", "Connectivity", "Device Setup", "Bug Reports"],
-    "Service Requests": ["New Service", "Upgrade", "Downgrade", "Cancellation"],
-    "Complaints": ["Service Complaint", "Agent Complaint", "Policy Dispute", "Escalations"],
-    "General Inquiry": ["Product Info", "Policy Inquiry", "Feedback", "Other"],
+    "Driver Support": ["Registration", "Verification", "Driver Documents", "Vehicle Issues", "Earnings", "Trips", "Rating Appeals", "Driver Safety"],
+    "Rider Support": ["Ride Issues", "Cancellation", "Refund Requests", "Payment Problems", "Safety Concerns", "Lost Items", "Accessibility"],
+    "Technical Support": ["App Issues", "Login Problems", "Payment Failures", "Map/GPS Issues", "Notification Problems", "Device Compatibility"],
+    "Safety & Compliance": ["Emergency Response", "Incident Reports", "Policy Violations", "Background Checks", "Driver Background", "Rider Safety"],
+    "Billing & Payments": ["Charge Disputes", "Refund Requests", "Payment Methods", "Invoice Queries", "Promo Codes", "Fare Disputes"],
+    "Sales & Partnerships": ["New Driver Signup", "Corporate Accounts", "Partnership Inquiries", "Promotions", "Referral Programs"],
+    "General Inquiry": ["App Features", "Policy Questions", "Feedback", "Other"],
 }
 
 COACHING_TYPES = [
     "Performance Improvement", "Skill Development", "Compliance Remediation",
     "Behavioural Coaching", "Role Play", "Knowledge Gap", "Follow-Up",
+    "Safety Training", "Customer Service Excellence", "De-escalation",
 ]
 
 COACHING_STATUS = [
     "Scheduled", "In Progress", "Completed", "Cancelled", "Pending Agent",
 ]
 
+# UDrive-specific skills/queues
 SKILLS_QUEUES = [
-    "General Queue", "VIP Queue", "Technical Queue", "Billing Queue",
-    "Escalation Queue", "Retention Queue", "Sales Queue",
+    "General Support", "Priority Support", "Driver Queue", "Rider Queue",
+    "Technical Support", "Billing Queue", "Escalations", "Safety & Emergency",
+    "Sales Queue", "Retention Queue", "Live Chat", "Phone Support",
 ]
 
+# UDrive-specific root causes
 ROOT_CAUSES = [
     "Lack of product knowledge",
     "Process non-compliance",
@@ -99,23 +77,30 @@ ROOT_CAUSES = [
     "Attitude / Motivation",
     "Time management",
     "Verification gaps",
+    "Safety protocol violation",
+    "Customer handling",
 ]
 
 TRAINING_MODULES = [
     "Communication Excellence", "Verification Protocols", "De-escalation Techniques",
-    "Product Knowledge Refresh", "CRM System Training", "Compliance & GDPR",
+    "Product Knowledge Refresh", "CRM System Training", "Compliance & Safety",
     "Call Handling Best Practices", "Documentation Standards", "SOP Refresher",
+    "Emergency Response", "Customer Empathy", "Conflict Resolution",
 ]
 
+# UDrive-specific No-Go violations
 NO_GO_VIOLATIONS = [
     "Verification Failure",
-    "Callback Failure",
+    "Safety Protocol Violation",
     "Call Avoidance",
     "Unreasonable Deflection",
     "Confidentiality Breach",
     "Misbehavior / Unprofessional Conduct",
+    "Emergency Handling Failure",
+    "Regulatory Compliance Breach",
 ]
 
+# UDrive quality score weights
 SCORE_WEIGHTS = {
     "greeting_format": 5,
     "closing_format": 5,
