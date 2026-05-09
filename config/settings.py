@@ -1,11 +1,12 @@
 """
 Application Configuration & Constants
 UDrive Quality Monitoring Platform
+Based on Etisalat/Enterprise QA Standards
 """
 
 APP_CONFIG = {
     "name": "UDrive Monitor",
-    "version": "2.0.0",
+    "version": "3.0.0",
     "company": "U-Drive",
     "qa_pass_threshold": 75,
     "coaching_required_threshold": 70,
@@ -23,21 +24,19 @@ ROLES = {
     "viewer": {"label": "Read-Only Viewer", "color": "#94A3B8", "pages": ["dashboard_*", "reports"]},
 }
 
-# UDrive-specific departments (ride-sharing platform)
 DEPARTMENTS = [
     "Driver Operations", "Rider Support", "Technical Support", 
     "Billing & Payments", "Safety & Compliance", "Sales", 
     "Operations", "Back Office", "Customer Experience",
 ]
 
-# UDrive-specific audit types
 AUDIT_TYPES = [
     "Live Monitoring", "Call Recording", "Chat Audit", 
     "Email Audit", "Screen Recording", "In-App Support", 
     "Emergency Calls", "Mystery Shopper",
 ]
 
-# UDrive-specific topics
+# UDrive Topics - matching ride-sharing platform
 TOPICS = {
     "Driver Support": ["Registration", "Verification", "Driver Documents", "Vehicle Issues", "Earnings", "Trips", "Rating Appeals", "Driver Safety"],
     "Rider Support": ["Ride Issues", "Cancellation", "Refund Requests", "Payment Problems", "Safety Concerns", "Lost Items", "Accessibility"],
@@ -58,14 +57,12 @@ COACHING_STATUS = [
     "Scheduled", "In Progress", "Completed", "Cancelled", "Pending Agent",
 ]
 
-# UDrive-specific skills/queues
 SKILLS_QUEUES = [
     "General Support", "Priority Support", "Driver Queue", "Rider Queue",
     "Technical Support", "Billing Queue", "Escalations", "Safety & Emergency",
     "Sales Queue", "Retention Queue", "Live Chat", "Phone Support",
 ]
 
-# UDrive-specific root causes
 ROOT_CAUSES = [
     "Lack of product knowledge",
     "Process non-compliance",
@@ -88,7 +85,6 @@ TRAINING_MODULES = [
     "Emergency Response", "Customer Empathy", "Conflict Resolution",
 ]
 
-# UDrive-specific No-Go violations
 NO_GO_VIOLATIONS = [
     "Verification Failure",
     "Safety Protocol Violation",
@@ -100,8 +96,41 @@ NO_GO_VIOLATIONS = [
     "Regulatory Compliance Breach",
 ]
 
-# UDrive quality score weights
+# UDrive Quality Score Weights - Based on Etisalat/Enterprise QA Standards
 SCORE_WEIGHTS = {
+    # Greeting & Closing (10%)
+    "greeting_closing": 10,
+    
+    # Engagement & Interaction (15%)
+    "engagement_interaction": 15,
+    
+    # Call/Chat Protocol & Hold Etiquette (10%)
+    "call_chat_protocol": 10,
+    
+    # Typing & Language (10%)
+    "typing_language": 10,
+    
+    # Correct and Complete Resolution (20%)
+    "correct_resolution": 20,
+    
+    # Relevant Information Provided (10%)
+    "relevant_information": 10,
+    
+    # Verification (10%)
+    "verification": 10,
+    
+    # Following Call Back Procedures (5%)
+    "call_back_procedures": 5,
+    
+    # Following Business Instructions (5%)
+    "business_instructions": 5,
+    
+    # Documentation (5%)
+    "documentation": 5,
+}
+
+# Alternative simpler weights (total = 100)
+SCORE_WEIGHTS_SIMPLE = {
     "greeting_format": 5,
     "closing_format": 5,
     "empathy_reassurance": 10,
