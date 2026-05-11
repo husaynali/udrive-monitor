@@ -61,16 +61,30 @@ def render_topnav():
             <div class="topnav-center">
     """, unsafe_allow_html=True)
 
-    # Navigation as dropdown selectbox
-    selected = st.selectbox(
-        "Navigation",
-        options=nav_options,
-        index=nav_options.index(current) if current in nav_options else 0,
-        key="nav_dropdown",
-        label_visibility="collapsed"
-    )
-    if selected != current:
-        st.session_state.current_page = selected
+    # Navigation as segmented control (inline pills)
+    try:
+        # Try Streamlit's segmented_control (newer versions)
+        selected = st.segmented_control(
+            "Navigation",
+            options=nav_options,
+            default=current,
+            key="nav_segments",
+            selection_mode="single"
+        )
+        if selected and selected != current:
+            st.session_state.current_page = selected
+            st.rerun()
+    except Exception:
+        # Fallback to selectbox
+        selected = st.selectbox(
+            "Navigation",
+            options=nav_options,
+            index=nav_options.index(current) if current in nav_options else 0,
+            key="nav_dropdown",
+            label_visibility="collapsed"
+        )
+        if selected != current:
+            st.session_state.current_page = selected
 
     st.markdown("""
             </div>
