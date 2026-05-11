@@ -55,7 +55,7 @@ def render_topnav():
             <div class="topnav-left">
                 <div class="udrive-logo">
                     <span style="font-family:'Outfit',sans-serif;font-size:1.5rem;font-weight:800;color:#52BAEF;">Udrive</span>
-                    <span style="font-family:'Outfit',sans-serif;font-size:1.5rem;font-weight:800;color:#1A2744;">Pro</span>
+                    <span style="font-family:'Outfit',sans-serif;font-size:1.5rem;font-weight:800;color:#F8FAFC;">Pro</span>
                 </div>
             </div>
             <div class="topnav-center">
@@ -103,7 +103,7 @@ def render_topnav():
             """, unsafe_allow_html=True)
         with col2:
             st.markdown(f"""
-                <div style="font-family:'Outfit',sans-serif;font-size:0.875rem;font-weight:600;color:#1A2744;">
+                <div style="font-family:'Outfit',sans-serif;font-size:0.875rem;font-weight:600;color:#F8FAFC;">
                     {user.get('name', 'User')}
                 </div>
                 <div style="font-family:'Plus+Jakarta+Sans',sans-serif;font-size:0.7rem;color:#52BAEF;text-transform:uppercase;">
@@ -126,8 +126,8 @@ def render_topnav():
             left: 0;
             right: 0;
             height: 70px;
-            background: #FFFFFF;
-            border-bottom: 1px solid #E3EBF1;
+            background: #1E293B;
+            border-bottom: 1px solid #334155;
             display: flex;
             align-items: center;
             justify-content: space-between;
