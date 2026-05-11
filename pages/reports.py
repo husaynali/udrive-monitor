@@ -72,25 +72,21 @@ def render():
                 display = filtered[[
                     "id","advisor_name","call_date","topic","total_score","passed","no_go_violation","qa_evaluator"
                 ]].copy()
-                display.columns = ["ID","Agent","Date","Topic","Score","Passed","No-Go","Evaluator"]
-                display["Score"]  = display["Score"].apply(lambda x: f"{x:.0f}%")
-                display["Passed"] = display["Passed"].apply(lambda x: "PASS" if x else "FAIL")
-                display["No-Go"]  = display["No-Go"].fillna("—")
-                display["Date"]   = display["Date"].dt.strftime("%Y-%m-%d")
-                st.dataframe(display, use_container_width=True, hide_index=True)
+                # Keep original column names for clean export
+                display["Score"]  = display["total_score"].apply(lambda x: f"{x:.0f}")
+                display["Pass"] = display["passed"].apply(lambda x: "PASS" if x else "FAIL")
+                display["No-Go"]  = display["no_go_violation"].fillna("—")
+                display["Date"]   = display["call_date"].dt.strftime("%Y-%m-%d")
+                # Show with renamed display but original names stay in export
+                st.dataframe(display[["id","advisor_name","Date","topic","Score","Pass","No-Go","qa_evaluator"]], use_container_width=True, hide_index=True)
 
-            # Export uses summary/display DataFrame with proper columns
+            # Export ALL raw data from database (excluding scores/pillars JSON column)
             col_dl1, col_dl2 = st.columns(2)
             
-            # Use appropriate DataFrame based on group_by selection
-            if group_by == "Team":
-                export_df = summary.copy()
-            elif group_by == "Department":
-                export_df = summary.copy()
-            elif group_by == "Topic":
-                export_df = summary.copy()
-            else:
-                export_df = display.copy()
+            # Get all columns - drop 'scores' which contains JSON for pillars, keep all other raw data
+            export_cols = [c for c in filtered.columns if c != "scores"]
+            export_df = filtered[export_cols].copy()
+            export_df["call_date"] = export_df["call_date"].dt.strftime("%Y-%m-%d %H:%M")
             
             # CSV export
             csv_data = export_df.to_csv(index=False).encode("utf-8")
@@ -123,14 +119,12 @@ def render():
             m2.metric("Completed",      comp_s)
             m3.metric("Completion Rate",f"{rate_s:.1f}%")
 
-            display_s = sdf[[
-                "id","advisor_name","coaching_date","coaching_type","completion_status","qa_score","coach_name"
-            ]].copy()
-            display_s.columns = ["ID","Agent","Date","Type","Status","QA Score","Coach"]
-            display_s["QA Score"] = display_s["QA Score"].apply(lambda x: f"{float(x):.0f}%")
+            display_s = sdf.copy()
+            display_s["coaching_date"] = display_s["coaching_date"].dt.strftime("%Y-%m-%d")
             st.dataframe(display_s, use_container_width=True, hide_index=True)
 
-            csv_s = display_s.to_csv(index=False).encode("utf-8")
+            # Export ALL raw data
+            csv_s = sdf.to_csv(index=False).encode("utf-8")
             st.download_button("⬇️ Download CSV", csv_s, f"coaching_report_{date.today()}.csv", "text/csv")
 
     # ── Agent Performance Report ───────────────────────────────────────────
