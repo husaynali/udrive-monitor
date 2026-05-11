@@ -1,5 +1,5 @@
 """
-Login Page
+Login Page - Udrive Branding
 """
 
 import streamlit as st
@@ -12,21 +12,21 @@ def render_login():
         <style>
         .login-wrap {
             max-width: 420px;
-            margin: 6vh auto 0;
+            margin: 8vh auto 0;
             padding: 2.5rem;
-            background: var(--bg-surface);
-            border: 1px solid var(--bg-border);
-            border-radius: var(--radius-lg);
-            box-shadow: var(--shadow-card), var(--shadow-glow);
+            background: #FFFFFF;
+            border: 1px solid #E3EBF1;
+            border-radius: 16px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.06);
         }
         </style>
         <div class="login-wrap">
             <div style="text-align:center;margin-bottom:2rem">
-                <div style="font-family:'Syne',sans-serif;font-size:2.5rem;font-weight:800;
-                            letter-spacing:-0.04em;color:#F0F2FF;line-height:1">
-                    QA <span style="color:#00D4FF">Pro</span>
+                <div style="font-family:'Outfit',sans-serif;font-size:2.5rem;font-weight:800;
+                            letter-spacing:-0.04em;color:#0F172A;line-height:1">
+                    Udrive <span style="color:#52BAEF">Pro</span>
                 </div>
-                <div style="font-size:0.78rem;color:#8B92B5;letter-spacing:0.12em;
+                <div style="font-family:'Plus+Jakarta+Sans',sans-serif;font-size:0.78rem;color:#475569;letter-spacing:0.12em;
                             text-transform:uppercase;margin-top:0.4rem">
                     Performance Management Platform
                 </div>
@@ -57,8 +57,8 @@ def render_login():
         st.markdown("---")
         st.markdown(
             """
-            <div style="font-size:0.78rem;color:#4A5075;text-align:center">
-                <strong style="color:#8B92B5">Demo Credentials</strong><br>
+            <div style="font-size:0.78rem;color:#94A3B8;text-align:center">
+                <strong style="color:#475569">Demo Credentials</strong><br>
                 admin@qa-pro.com / Admin@123<br>
                 evaluator@qa-pro.com / Eval@123<br>
                 coach@qa-pro.com / Coach@123<br>
