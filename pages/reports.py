@@ -69,24 +69,28 @@ def render():
                 ).reset_index()
                 st.dataframe(summary, use_container_width=True, hide_index=True)
             else:
-                display = filtered[[
-                    "id","advisor_name","call_date","topic","total_score","passed","no_go_violation","qa_evaluator"
-                ]].copy()
-                # Keep original column names for clean export
+                # Show key columns but export has ALL data
+                display_cols = ["id","advisor_name","call_date","topic","total_score","passed","no_go_violation","qa_evaluator","monitoring_date"]
+                display = filtered[display_cols].copy()
                 display["Score"]  = display["total_score"].apply(lambda x: f"{x:.0f}")
                 display["Pass"] = display["passed"].apply(lambda x: "PASS" if x else "FAIL")
                 display["No-Go"]  = display["no_go_violation"].fillna("—")
                 display["Date"]   = display["call_date"].dt.strftime("%Y-%m-%d")
-                # Show with renamed display but original names stay in export
-                st.dataframe(display[["id","advisor_name","Date","topic","Score","Pass","No-Go","qa_evaluator"]], use_container_width=True, hide_index=True)
+                display["Mon Date"] = display["monitoring_date"].dt.strftime("%Y-%m-%d") if "monitoring_date" in display.columns else "—"
+                st.dataframe(display[["id","advisor_name","Date","Mon Date","topic","Score","Pass","No-Go","qa_evaluator"]], use_container_width=True, hide_index=True)
 
-            # Export ALL raw data from database (excluding scores/pillars JSON column)
+            # Export ALL raw data from database - include all columns EXCEPT scores_json
             col_dl1, col_dl2 = st.columns(2)
             
-            # Get all columns - drop 'scores' which contains JSON for pillars, keep all other raw data
-            export_cols = [c for c in filtered.columns if c != "scores"]
+            # Get all columns from filtered data - exclude only scores_json (JSON pillar details)
+            export_cols = [c for c in filtered.columns if c != "scores_json"]
             export_df = filtered[export_cols].copy()
-            export_df["call_date"] = export_df["call_date"].dt.strftime("%Y-%m-%d %H:%M")
+            
+            # Format date columns for Excel readability
+            date_cols = ["call_date", "monitoring_date", "created_at"]
+            for dc in date_cols:
+                if dc in export_df.columns:
+                    export_df[dc] = export_df[dc].dt.strftime("%Y-%m-%d %H:%M")
             
             # CSV export
             csv_data = export_df.to_csv(index=False).encode("utf-8")
@@ -120,10 +124,12 @@ def render():
             m3.metric("Completion Rate",f"{rate_s:.1f}%")
 
             display_s = sdf.copy()
-            display_s["coaching_date"] = display_s["coaching_date"].dt.strftime("%Y-%m-%d")
+            # Format dates for display
+            if "coaching_date" in display_s.columns:
+                display_s["coaching_date"] = display_s["coaching_date"].dt.strftime("%Y-%m-%d")
             st.dataframe(display_s, use_container_width=True, hide_index=True)
 
-            # Export ALL raw data
+            # Export ALL raw data - include all columns
             csv_s = sdf.to_csv(index=False).encode("utf-8")
             st.download_button("⬇️ Download CSV", csv_s, f"coaching_report_{date.today()}.csv", "text/csv")
 
@@ -159,15 +165,13 @@ def render():
             st.info("No data.")
         else:
             df3 = pd.DataFrame(evals)
-            nogo_df = df3[df3["no_go_violation"].notna()][[
-                "id","advisor_name","call_date","no_go_violation","team_lead","qa_evaluator"
-            ]].copy()
-            nogo_df.columns = ["Eval ID","Agent","Date","Violation","Team Lead","Evaluator"]
+            nogo_df = df3[df3["no_go_violation"].notna()].copy()
 
             if nogo_df.empty:
                 st.success("🎉 No No-Go violations in the system!")
             else:
                 st.error(f"⚠️ {len(nogo_df)} No-Go violation(s) on record")
                 st.dataframe(nogo_df, use_container_width=True, hide_index=True)
-                csv_c = nogo_df.to_csv(index=False).encode("utf-8")
+                # Export ALL raw data (all columns from database)
                 st.download_button("⬇️ Download CSV", csv_c, f"compliance_report_{date.today()}.csv", "text/csv")
+
