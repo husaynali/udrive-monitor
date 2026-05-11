@@ -5,6 +5,7 @@ Reports & Export Center
 import streamlit as st
 import pandas as pd
 import io
+import json
 from datetime import date
 from utils.theme import section_header
 
@@ -87,10 +88,9 @@ def render():
             
             # Expand scores_json (JSON) into separate columns
             if "scores_json" in export_df.columns:
-                import json as json_lib
                 # Parse JSON and expand into separate columns
                 scores_expanded = export_df["scores_json"].apply(
-                    lambda x: json_lib.loads(x) if isinstance(x, str) and x.startswith("{") else {}
+                    lambda x: json.loads(x) if isinstance(x, str) and x.startswith("{") else {}
                 ).apply(pd.Series)
                 # Rename columns with prefix
                 scores_expanded.columns = [f"pillar_{c}" for c in scores_expanded.columns]
@@ -138,9 +138,12 @@ def render():
             m3.metric("Completion Rate",f"{rate_s:.1f}%")
 
             display_s = sdf.copy()
-            # Format dates for display
+            # Format dates for display (check if datetime first)
             if "coaching_date" in display_s.columns:
-                display_s["coaching_date"] = display_s["coaching_date"].dt.strftime("%Y-%m-%d")
+                try:
+                    display_s["coaching_date"] = pd.to_datetime(display_s["coaching_date"]).dt.strftime("%Y-%m-%d")
+                except:
+                    pass
             st.dataframe(display_s, use_container_width=True, hide_index=True)
 
             # Export ALL raw data - include all columns
