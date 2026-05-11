@@ -28,7 +28,6 @@ def inject_global_styles():
             --text-muted: #94A3B8;
             --font-display: 'Outfit', sans-serif;
             --font-body: 'Plus Jakarta Sans', sans-serif;
-            --font-mono: 'JetBrains Mono', monospace;
             --radius-sm: 6px;
             --radius-md: 10px;
             --radius-lg: 16px;
