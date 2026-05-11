@@ -76,8 +76,8 @@ def render():
                 display["Score"]  = display["total_score"].apply(lambda x: f"{x:.0f}")
                 display["Pass"] = display["passed"].apply(lambda x: "PASS" if x else "FAIL")
                 display["No-Go"]  = display["no_go_violation"].fillna("—")
-                display["Date"]   = display["call_date"].dt.strftime("%Y-%m-%d")
-                display["Mon Date"] = display["monitoring_date"].dt.strftime("%Y-%m-%d") if "monitoring_date" in display.columns else "—"
+                display["Date"]   = pd.to_datetime(display["call_date"]).dt.strftime("%Y-%m-%d") if "call_date" in display.columns else "—"
+                display["Mon Date"] = pd.to_datetime(display["monitoring_date"]).dt.strftime("%Y-%m-%d") if "monitoring_date" in display.columns else "—"
                 st.dataframe(display[["id","advisor_name","Date","Mon Date","topic","Score","Pass","No-Go","qa_evaluator"]], use_container_width=True, hide_index=True)
 
             # Export ALL raw data from database - expand scores_json into separate columns
