@@ -30,22 +30,43 @@ TL_MAP = {
 
 
 def _score_row(label, key, max_val, weight_pct):
-    col_label, col_slider, col_val = st.columns([3, 4, 1])
+    col_label, col_input, col_comment = st.columns([3, 1, 2])
     with col_label:
         st.markdown(
-            f'<div style="padding:0.45rem 0;font-size:0.88rem;color:#F0F2FF">'
-            f'{label} <span style="color:#4A5075;font-size:0.75rem">({weight_pct}%)</span></div>',
+            f'<div style="padding:0.5rem 0;font-size:0.9rem;color:#E2E8F0;font-weight:500">'
+            f'{label} <span style="color:#64748B;font-size:0.8rem;">({weight_pct}%)</span></div>',
             unsafe_allow_html=True,
         )
-    with col_slider:
-        val = st.slider("", 0, max_val, max_val, key=key, label_visibility="collapsed")
-    with col_val:
-        color = "#00E5A0" if val == max_val else "#FFB800" if val > 0 else "#FF4B6E"
+    with col_input:
+        val = st.number_input(
+            f"Score", 
+            min_value=0, 
+            max_value=max_val, 
+            value=max_val, 
+            key=key,
+            label_visibility="collapsed"
+        )
+        # Show score indicator
+        color = "#10B981" if val == max_val else "#F59E0B" if val > max_val//2 else "#EF4444" if val > 0 else "#6B7280"
         st.markdown(
-            f'<div style="text-align:center;padding:0.35rem;color:{color};'
-            f'font-family:var(--font-mono);font-size:0.9rem;font-weight:600">{val}</div>',
+            f'<div style="text-align:center;padding:0.25rem;color:{color};'
+            f'font-size:0.85rem;font-weight:600">{val}/{max_val}</div>',
             unsafe_allow_html=True,
         )
+    with col_comment:
+        # Comment/reason field for each pillar
+        comment = st.text_area(
+            f"Comment for {label}", 
+            placeholder=f"Reason for score...",
+            key=f"{key}_comment",
+            label_visibility="collapsed",
+            height=60
+        )
+        # Store in session state for saving
+        if f"pillar_comments" not in st.session_state:
+            st.session_state.pillar_comments = {}
+        if comment:
+            st.session_state.pillar_comments[key] = comment
     return val
 
 
@@ -139,6 +160,9 @@ def render():
         submitted = st.form_submit_button("✅ Submit Evaluation", use_container_width=True)
 
     if submitted:
+        # Get pillar comments from session state
+        pillar_comments = st.session_state.get("pillar_comments", {})
+        
         scores = {
             "greeting_format":        score_greeting,
             "closing_format":         score_closing,
@@ -154,7 +178,16 @@ def render():
             "business_instructions":  score_biz_inst,
             "documentation_accuracy": score_doc,
         }
-        raw_total = sum(scores.values())
+        
+        # Include pillar comments in scores for storage
+        scores_with_comments = {}
+        for k, v in scores.items():
+            scores_with_comments[k] = {
+                "score": v,
+                "comment": pillar_comments.get(k, "")
+            }
+        
+        raw_total = sum(s["score"] for s in scores_with_comments.values())
         has_nogo  = bool(nogo_violations) or pro_language.startswith("Fail")
         final     = 0 if has_nogo else raw_total
         passed    = not has_nogo and raw_total >= 75
@@ -175,7 +208,7 @@ def render():
             "department":       dept,
             "qa_evaluator":     user.get("name",""),
             "week_number":      date.today().isocalendar()[1],
-            "scores":           scores,
+            "scores":           scores_with_comments,
             "total_score":      final,
             "passed":           passed,
             "no_go_violation":  nogo_violations[0] if nogo_violations else None,
@@ -199,3 +232,7 @@ def render():
             st.warning(f"⚠️ FAILED — Score: {final}% (Threshold: 75%)")
 
         st.info(f"Evaluation **{eid}** saved to database. {'Coaching session required.' if not passed else ''}")
+        
+        # Clear session state for next evaluation
+        if "pillar_comments" in st.session_state:
+            st.session_state.pillar_comments = {}
