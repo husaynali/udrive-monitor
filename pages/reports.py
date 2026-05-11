@@ -79,18 +79,32 @@ def render():
                 display["Mon Date"] = display["monitoring_date"].dt.strftime("%Y-%m-%d") if "monitoring_date" in display.columns else "—"
                 st.dataframe(display[["id","advisor_name","Date","Mon Date","topic","Score","Pass","No-Go","qa_evaluator"]], use_container_width=True, hide_index=True)
 
-            # Export ALL raw data from database - include all columns EXCEPT scores_json
+            # Export ALL raw data from database - expand scores_json into separate columns
             col_dl1, col_dl2 = st.columns(2)
             
-            # Get all columns from filtered data - exclude only scores_json (JSON pillar details)
-            export_cols = [c for c in filtered.columns if c != "scores_json"]
-            export_df = filtered[export_cols].copy()
+            # Get all columns from filtered data
+            export_df = filtered.copy()
             
-            # Format date columns for Excel readability
+            # Expand scores_json (JSON) into separate columns
+            if "scores_json" in export_df.columns:
+                import json as json_lib
+                # Parse JSON and expand into separate columns
+                scores_expanded = export_df["scores_json"].apply(
+                    lambda x: json_lib.loads(x) if isinstance(x, str) and x.startswith("{") else {}
+                ).apply(pd.Series)
+                # Rename columns with prefix
+                scores_expanded.columns = [f"pillar_{c}" for c in scores_expanded.columns]
+                # Merge with main dataframe
+                export_df = pd.concat([export_df.drop(columns=["scores_json"]), scores_expanded], axis=1)
+            
+            # Format date columns
             date_cols = ["call_date", "monitoring_date", "created_at"]
             for dc in date_cols:
                 if dc in export_df.columns:
-                    export_df[dc] = export_df[dc].dt.strftime("%Y-%m-%d %H:%M")
+                    try:
+                        export_df[dc] = pd.to_datetime(export_df[dc]).dt.strftime("%Y-%m-%d %H:%M")
+                    except:
+                        pass
             
             # CSV export
             csv_data = export_df.to_csv(index=False).encode("utf-8")
