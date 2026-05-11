@@ -79,15 +79,27 @@ def render():
                 display["Date"]   = display["Date"].dt.strftime("%Y-%m-%d")
                 st.dataframe(display, use_container_width=True, hide_index=True)
 
-            # Export
+            # Export uses summary/display DataFrame with proper columns
             col_dl1, col_dl2 = st.columns(2)
-            csv_data = filtered.drop(columns=["scores"], errors="ignore").to_csv(index=False).encode("utf-8")
+            
+            # Use appropriate DataFrame based on group_by selection
+            if group_by == "Team":
+                export_df = summary.copy()
+            elif group_by == "Department":
+                export_df = summary.copy()
+            elif group_by == "Topic":
+                export_df = summary.copy()
+            else:
+                export_df = display.copy()
+            
+            # CSV export
+            csv_data = export_df.to_csv(index=False).encode("utf-8")
             col_dl1.download_button("⬇️ Download CSV", csv_data, f"qa_report_{date.today()}.csv", "text/csv")
 
             # Excel export
             excel_buf = io.BytesIO()
             with pd.ExcelWriter(excel_buf, engine="openpyxl") as writer:
-                filtered.drop(columns=["scores"], errors="ignore").to_excel(writer, sheet_name="QA Report", index=False)
+                export_df.to_excel(writer, sheet_name="QA Report", index=False)
             col_dl2.download_button(
                 "⬇️ Download Excel",
                 data=excel_buf.getvalue(),
