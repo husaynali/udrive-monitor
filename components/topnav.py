@@ -55,28 +55,24 @@ def render_topnav():
             <div class="topnav-left">
                 <div class="udrive-logo">
                     <span style="font-family:'Outfit',sans-serif;font-size:1.5rem;font-weight:800;color:#52BAEF;">Udrive</span>
-                    <span style="font-family:'Outfit',sans-serif;font-size:1.5rem;font-weight:800;color:#0F172A;">Pro</span>
+                    <span style="font-family:'Outfit',sans-serif;font-size:1.5rem;font-weight:800;color:#1A2744;">Pro</span>
                 </div>
             </div>
             <div class="topnav-center">
-                <div class="nav-tabs">
     """, unsafe_allow_html=True)
 
-    # Navigation tabs
-    cols = st.columns(len(nav_options))
-    for i, page in enumerate(nav_options):
-        with cols[i]:
-            is_active = page == current
-            if st.button(
-                page,
-                key=f"nav_{page}",
-                type="primary" if is_active else "secondary",
-                use_container_width=True
-            ):
-                st.session_state.current_page = page
+    # Navigation as dropdown selectbox
+    selected = st.selectbox(
+        "Navigation",
+        options=nav_options,
+        index=nav_options.index(current) if current in nav_options else 0,
+        key="nav_dropdown",
+        label_visibility="collapsed"
+    )
+    if selected != current:
+        st.session_state.current_page = selected
 
     st.markdown("""
-                </div>
             </div>
             <div class="topnav-right">
                 <div class="user-menu">
@@ -93,7 +89,7 @@ def render_topnav():
             """, unsafe_allow_html=True)
         with col2:
             st.markdown(f"""
-                <div style="font-family:'Outfit',sans-serif;font-size:0.875rem;font-weight:600;color:#0F172A;">
+                <div style="font-family:'Outfit',sans-serif;font-size:0.875rem;font-weight:600;color:#1A2744;">
                     {user.get('name', 'User')}
                 </div>
                 <div style="font-family:'Plus+Jakarta+Sans',sans-serif;font-size:0.7rem;color:#52BAEF;text-transform:uppercase;">
