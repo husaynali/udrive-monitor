@@ -1,6 +1,7 @@
 """
 QA Evaluation, Coaching & Performance Management Platform
 Main Application Entry Point — Production (SQLite-backed)
+Udrive Branding Applied
 """
 
 import streamlit as st
@@ -8,14 +9,14 @@ from config.settings import APP_CONFIG
 from utils.database import init_db
 from utils.auth import init_session, require_auth
 from utils.theme import inject_global_styles
-from components.sidebar import render_sidebar
+from components.topnav import render_topnav
 
-# ── Page config ──────────────────────────────────────────────────────────────
+# Page config
 st.set_page_config(
-    page_title="QA Pro — Performance Management Platform",
-    page_icon="🎯",
+    page_title="Udrive Pro — Performance Management Platform",
+    page_icon="🚗",
     layout="wide",
-    initial_sidebar_state="expanded",
+    initial_sidebar_state="collapsed",
 )
 
 inject_global_styles()
@@ -36,7 +37,7 @@ def main():
         render_login()
         return
 
-    page = render_sidebar()
+    page = render_topnav()
 
     if page == "Executive Dashboard":
         from pages.dashboard_executive import render

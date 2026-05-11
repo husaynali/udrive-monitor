@@ -1,6 +1,6 @@
 """
-Global Theme & Style Injection — U-Drive Design System
-Dark industrial theme with vivid accent colors.
+Global Theme & Style Injection — Udrive Design System
+Modern enterprise dashboard with Udrive branding.
 """
 
 import streamlit as st
@@ -10,276 +10,90 @@ def inject_global_styles():
     st.markdown(
         """
         <style>
-        /* ── Google Fonts ─────────────────────────────────── */
-        @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&family=JetBrains+Mono:wght@400;600&display=swap');
-
-        /* ── CSS Variables ────────────────────────────────── */
+        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800');
         :root {
-            --bg-base:       #0D0F14;
-            --bg-surface:    #161920;
-            --bg-elevated:   #1E2130;
-            --bg-border:     #2A2E45;
-            --accent-primary:#00D4FF;
-            --accent-second: #FF4B6E;
-            --accent-green:  #00E5A0;
-            --accent-amber:  #FFB800;
-            --accent-purple: #9D7BFF;
-            --text-primary:  #F0F2FF;
-            --text-secondary:#8B92B5;
-            --text-muted:    #4A5075;
-            --font-display:  'Syne', sans-serif;
-            --font-body:     'DM Sans', sans-serif;
-            --font-mono:     'JetBrains Mono', monospace;
-            --radius-sm:     6px;
-            --radius-md:     12px;
-            --radius-lg:     20px;
-            --shadow-card:   0 4px 24px rgba(0,0,0,0.4);
-            --shadow-glow:   0 0 20px rgba(0,212,255,0.15);
+            --udrive-primary: #52BAEF;
+            --udrive-primary-dark: #3DA8D8;
+            --udrive-primary-light: #7AC5F2;
+            --bg-base: #F7F9FC;
+            --bg-surface: #FFFFFF;
+            --bg-elevated: #F0F4F8;
+            --border-light: #E3EBF1;
+            --border-medium: #D1DCE5;
+            --accent-success: #10B981;
+            --accent-warning: #F59E0B;
+            --accent-danger: #EF4444;
+            --text-primary: #0F172A;
+            --text-secondary: #475569;
+            --text-muted: #94A3B8;
+            --font-display: 'Outfit', sans-serif;
+            --font-body: 'Plus Jakarta Sans', sans-serif;
+            --radius-sm: 6px;
+            --radius-md: 10px;
+            --radius-lg: 16px;
+            --shadow-sm: 0 1px 2px rgba(0,0,0,0.04);
+            --shadow-md: 0 4px 12px rgba(0,0,0,0.06);
         }
-
-        /* ── Base Reset ───────────────────────────────────── */
-        html, body, [class*="css"] {
-            font-family: var(--font-body) !important;
-            background-color: var(--bg-base) !important;
-            color: var(--text-primary) !important;
-        }
-
-        /* ── Sidebar ──────────────────────────────────────── */
-        section[data-testid="stSidebar"] {
-            background: var(--bg-surface) !important;
-            border-right: 1px solid var(--bg-border) !important;
-        }
-        section[data-testid="stSidebar"] * { color: var(--text-primary) !important; }
-
-        /* ── Streamlit Overrides ──────────────────────────── */
+        html, body, [class*="css"] { font-family: var(--font-body) !important; background-color: var(--bg-base) !important; color: var(--text-primary) !important; }
         .stApp { background: var(--bg-base) !important; }
         .block-container { padding: 1.5rem 2rem 3rem !important; max-width: 1600px !important; }
-
-        /* ── Headings ─────────────────────────────────────── */
-        h1, h2, h3, h4, h5 {
-            font-family: var(--font-display) !important;
-            color: var(--text-primary) !important;
-            letter-spacing: -0.02em;
-        }
-
-        /* ── Inputs ───────────────────────────────────────── */
-        input, textarea, select,
-        .stTextInput > div > div > input,
-        .stTextArea > div > div > textarea,
-        .stSelectbox > div > div > div {
-            background: var(--bg-elevated) !important;
-            border: 1px solid var(--bg-border) !important;
-            color: var(--text-primary) !important;
-            border-radius: var(--radius-sm) !important;
-            font-family: var(--font-body) !important;
-        }
-        .stTextInput > div > div > input:focus,
-        .stTextArea > div > div > textarea:focus {
-            border-color: var(--accent-primary) !important;
-            box-shadow: 0 0 0 2px rgba(0,212,255,0.15) !important;
-        }
-
-        /* ── Buttons ──────────────────────────────────────── */
-        .stButton > button {
-            background: linear-gradient(135deg, var(--accent-primary), #0099CC) !important;
-            color: #000 !important;
-            font-family: var(--font-display) !important;
-            font-weight: 700 !important;
-            font-size: 0.85rem !important;
-            letter-spacing: 0.05em !important;
-            border: none !important;
-            border-radius: var(--radius-sm) !important;
-            padding: 0.5rem 1.25rem !important;
-            transition: all 0.2s ease !important;
-        }
-        .stButton > button:hover {
-            transform: translateY(-1px) !important;
-            box-shadow: 0 6px 20px rgba(0,212,255,0.35) !important;
-        }
-        .stButton > button[kind="secondary"] {
-            background: var(--bg-elevated) !important;
-            color: var(--text-primary) !important;
-            border: 1px solid var(--bg-border) !important;
-        }
-
-        /* ── Metrics ──────────────────────────────────────── */
-        [data-testid="metric-container"] {
-            background: var(--bg-surface) !important;
-            border: 1px solid var(--bg-border) !important;
-            border-radius: var(--radius-md) !important;
-            padding: 1rem 1.25rem !important;
-        }
-        [data-testid="stMetricLabel"] { color: var(--text-secondary) !important; font-size: 0.78rem !important; text-transform: uppercase; letter-spacing: 0.08em; }
-        [data-testid="stMetricValue"] { font-family: var(--font-display) !important; color: var(--text-primary) !important; }
-        [data-testid="stMetricDelta"] { font-size: 0.82rem !important; }
-
-        /* ── DataFrames / Tables ──────────────────────────── */
-        .dataframe, [data-testid="stDataFrame"] {
-            border-radius: var(--radius-md) !important;
-            overflow: hidden !important;
-        }
-        .dataframe th {
-            background: var(--bg-elevated) !important;
-            color: var(--accent-primary) !important;
-            font-family: var(--font-display) !important;
-            font-size: 0.78rem !important;
-            text-transform: uppercase;
-            letter-spacing: 0.06em;
-        }
-        .dataframe td {
-            background: var(--bg-surface) !important;
-            color: var(--text-primary) !important;
-            border-color: var(--bg-border) !important;
-        }
-
-        /* ── Tabs ─────────────────────────────────────────── */
-        .stTabs [data-baseweb="tab-list"] {
-            background: var(--bg-surface) !important;
-            border-radius: var(--radius-md) !important;
-            padding: 0.25rem !important;
-            gap: 0.25rem;
-            border: 1px solid var(--bg-border) !important;
-        }
-        .stTabs [data-baseweb="tab"] {
-            color: var(--text-secondary) !important;
-            font-family: var(--font-display) !important;
-            font-size: 0.83rem !important;
-            font-weight: 600 !important;
-            border-radius: var(--radius-sm) !important;
-            padding: 0.4rem 1rem !important;
-        }
-        .stTabs [aria-selected="true"] {
-            background: var(--accent-primary) !important;
-            color: #000 !important;
-        }
-
-        /* ── Expander ─────────────────────────────────────── */
-        .streamlit-expanderHeader {
-            background: var(--bg-surface) !important;
-            border: 1px solid var(--bg-border) !important;
-            border-radius: var(--radius-sm) !important;
-            color: var(--text-primary) !important;
-            font-family: var(--font-display) !important;
-        }
-        .streamlit-expanderContent {
-            background: var(--bg-elevated) !important;
-            border: 1px solid var(--bg-border) !important;
-        }
-
-        /* ── Alerts ───────────────────────────────────────── */
-        .stAlert { border-radius: var(--radius-md) !important; }
-        .stSuccess { background: rgba(0,229,160,0.1) !important; border-color: var(--accent-green) !important; }
-        .stError   { background: rgba(255,75,110,0.1) !important; border-color: var(--accent-second) !important; }
-        .stWarning { background: rgba(255,184,0,0.1)  !important; border-color: var(--accent-amber) !important; }
-        .stInfo    { background: rgba(0,212,255,0.08) !important; border-color: var(--accent-primary) !important; }
-
-        /* ── Divider ──────────────────────────────────────── */
-        hr { border-color: var(--bg-border) !important; }
-
-        /* ── Scrollbar ────────────────────────────────────── */
-        ::-webkit-scrollbar { width: 6px; height: 6px; }
-        ::-webkit-scrollbar-track { background: var(--bg-base); }
-        ::-webkit-scrollbar-thumb { background: var(--bg-border); border-radius: 3px; }
+        section[data-testid="stSidebar"] { display: none !important; }
+        header[data-testid="stHeader"] { display: none !important; }
+        h1, h2, h3, h4, h5 { font-family: var(--font-display) !important; color: var(--text-primary) !important; font-weight: 600 !important; }
+        .stButton > button { background: linear-gradient(135deg, var(--udrive-primary), var(--udrive-primary-dark)) !important; color: #FFFFFF !important; font-family: var(--font-display) !important; font-weight: 600 !important; border: none !important; border-radius: var(--radius-md) !important; box-shadow: 0 2px 8px rgba(82,186,239,0.25) !important; }
+        .stButton > button:hover { transform: translateY(-2px) !important; box-shadow: 0 6px 20px rgba(82,186,239,0.35) !important; }
+        .stButton > button[kind="secondary"] { background: var(--bg-surface) !important; color: var(--text-primary) !important; border: 1px solid var(--border-medium) !important; box-shadow: none !important; }
+        [data-testid="metric-container"] { background: var(--bg-surface) !important; border: 1px solid var(--border-light) !important; border-radius: var(--radius-lg) !important; padding: 1.25rem 1.5rem !important; box-shadow: var(--shadow-sm) !important; }
+        [data-testid="stMetricLabel"] { color: var(--text-secondary) !important; font-size: 0.75rem !important; text-transform: uppercase; letter-spacing: 0.08em; font-weight: 600 !important; }
+        [data-testid="stMetricValue"] { font-family: var(--font-display) !important; color: var(--text-primary) !important; font-weight: 700 !important; font-size: 1.75rem !important; }
+        .stTabs [data-baseweb="tab-list"] { background: var(--bg-surface) !important; border-radius: var(--radius-lg) !important; padding: 0.35rem !important; gap: 0.35rem; border: 1px solid var(--border-light) !important; }
+        .stTabs [data-baseweb="tab"] { color: var(--text-secondary) !important; font-family: var(--font-display) !important; font-size: 0.8rem !important; font-weight: 600 !important; border-radius: var(--radius-md) !important; }
+        .stTabs [aria-selected="true"] { background: var(--udrive-primary) !important; color: #FFFFFF !important; }
+        .streamlit-expanderHeader { background: var(--bg-surface) !important; border: 1px solid var(--border-light) !important; border-radius: var(--radius-md) !important; color: var(--text-primary) !important; font-family: var(--font-display) !important; font-weight: 600 !important; }
+        .stAlert { border-radius: var(--radius-md) !important; border: none !important; }
+        .stSuccess { background: rgba(16,185,129,0.1) !important; border-left: 4px solid var(--accent-success) !important; }
+        .stError { background: rgba(239,68,68,0.1) !important; border-left: 4px solid var(--accent-danger) !important; }
+        .stWarning { background: rgba(245,158,11,0.1) !important; border-left: 4px solid var(--accent-warning) !important; }
+        .stInfo { background: rgba(82,186,239,0.1) !important; border-left: 4px solid var(--udrive-primary) !important; }
+        hr { border-color: var(--border-light) !important; margin: 1.5rem 0 !important; }
+        .dataframe, [data-testid="stDataFrame"] { border-radius: var(--radius-lg) !important; overflow: hidden !important; border: 1px solid var(--border-light) !important; }
+        .dataframe th { background: var(--bg-elevated) !important; color: var(--text-primary) !important; font-family: var(--font-display) !important; font-size: 0.75rem !important; text-transform: uppercase; letter-spacing: 0.06em; font-weight: 700 !important; }
+        .dataframe td { background: var(--bg-surface) !important; color: var(--text-primary) !important; border-color: var(--border-light) !important; }
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: var(--bg-elevated); border-radius: 4px; }
+        ::-webkit-scrollbar-thumb { background: var(--border-medium); border-radius: 4px; }
         ::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
-
-        /* ── Custom Card ──────────────────────────────────── */
-        .qa-card {
-            background: var(--bg-surface);
-            border: 1px solid var(--bg-border);
-            border-radius: var(--radius-md);
-            padding: 1.25rem 1.5rem;
-            margin-bottom: 1rem;
-            box-shadow: var(--shadow-card);
-            transition: border-color 0.2s ease;
-        }
-        .qa-card:hover { border-color: rgba(0,212,255,0.3); }
-        .qa-card-header {
-            font-family: var(--font-display);
-            font-size: 0.72rem;
-            font-weight: 700;
-            letter-spacing: 0.1em;
-            text-transform: uppercase;
-            color: var(--accent-primary);
-            margin-bottom: 0.75rem;
-        }
-
-        /* ── Status Badges ────────────────────────────────── */
-        .badge {
-            display: inline-block;
-            padding: 0.2rem 0.65rem;
-            border-radius: 999px;
-            font-family: var(--font-display);
-            font-size: 0.7rem;
-            font-weight: 700;
-            letter-spacing: 0.06em;
-            text-transform: uppercase;
-        }
-        .badge-pass    { background: rgba(0,229,160,0.15); color: #00E5A0; border: 1px solid rgba(0,229,160,0.3); }
-        .badge-fail    { background: rgba(255,75,110,0.15); color: #FF4B6E; border: 1px solid rgba(255,75,110,0.3); }
-        .badge-nogo    { background: rgba(255,75,110,0.25); color: #FF4B6E; border: 1px solid #FF4B6E; }
-        .badge-warning { background: rgba(255,184,0,0.15);  color: #FFB800; border: 1px solid rgba(255,184,0,0.3); }
-        .badge-info    { background: rgba(0,212,255,0.12);  color: #00D4FF; border: 1px solid rgba(0,212,255,0.25); }
-        .badge-purple  { background: rgba(157,123,255,0.15);color: #9D7BFF; border: 1px solid rgba(157,123,255,0.3); }
-
-        /* ── Page Title ───────────────────────────────────── */
-        .page-title {
-            font-family: var(--font-display);
-            font-size: 1.9rem;
-            font-weight: 800;
-            letter-spacing: -0.03em;
-            color: var(--text-primary);
-            margin-bottom: 0.25rem;
-            line-height: 1.1;
-        }
-        .page-subtitle {
-            font-family: var(--font-body);
-            font-size: 0.9rem;
-            color: var(--text-secondary);
-            margin-bottom: 1.5rem;
-        }
-
-        /* ── Score Ring visual ────────────────────────────── */
-        .score-display {
-            font-family: var(--font-display);
-            font-size: 3rem;
-            font-weight: 800;
-            line-height: 1;
-        }
-
-        /* ── Sidebar nav item ─────────────────────────────── */
-        .nav-item {
-            display: flex;
-            align-items: center;
-            gap: 0.6rem;
-            padding: 0.5rem 0.75rem;
-            border-radius: var(--radius-sm);
-            cursor: pointer;
-            font-family: var(--font-body);
-            font-size: 0.88rem;
-            color: var(--text-secondary);
-            transition: all 0.15s ease;
-            margin-bottom: 0.15rem;
-        }
-        .nav-item:hover { background: var(--bg-elevated); color: var(--text-primary); }
-        .nav-item.active { background: rgba(0,212,255,0.1); color: var(--accent-primary); border-left: 3px solid var(--accent-primary); }
+        .udrive-card { background: var(--bg-surface); border: 1px solid var(--border-light); border-radius: var(--radius-lg); padding: 1.5rem; margin-bottom: 1rem; box-shadow: var(--shadow-sm); transition: all 0.3s ease; }
+        .udrive-card:hover { border-color: var(--udrive-primary); box-shadow: var(--shadow-md); }
+        .udrive-card-header { font-family: var(--font-display); font-size: 0.7rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--udrive-primary); margin-bottom: 0.75rem; }
+        .badge { display: inline-block; padding: 0.25rem 0.75rem; border-radius: 999px; font-family: var(--font-display); font-size: 0.7rem; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; }
+        .badge-pass { background: rgba(16,185,129,0.1); color: var(--accent-success); border: 1px solid rgba(16,185,129,0.3); }
+        .badge-fail { background: rgba(239,68,68,0.1); color: var(--accent-danger); border: 1px solid rgba(239,68,68,0.3); }
+        .badge-nogi { background: rgba(239,68,68,0.15); color: var(--accent-danger); border: 1px solid var(--accent-danger); }
+        .badge-warning { background: rgba(245,158,11,0.1); color: var(--accent-warning); border: 1px solid rgba(245,158,11,0.3); }
+        .badge-info { background: rgba(82,186,239,0.1); color: var(--udrive-primary); border: 1px solid rgba(82,186,239,0.25); }
+        .page-title { font-family: var(--font-display); font-size: 1.75rem; font-weight: 700; letter-spacing: -0.03em; color: var(--text-primary); margin-bottom: 0.25rem; line-height: 1.2; }
+        .page-subtitle { font-family: var(--font-body); font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 1.5rem; }
+        .score-display { font-family: var(--font-display); font-size: 2.5rem; font-weight: 700; line-height: 1; }
+        .stProgress > div > div > div { background: linear-gradient(90deg, var(--udrive-primary), var(--udrive-primary-light)) !important; border-radius: 999px !important; }
+        .stFormSubmitButton > button { background: linear-gradient(135deg, var(--udrive-primary), var(--udrive-primary-dark)) !important; color: #FFFFFF !important; font-family: var(--font-display) !important; font-weight: 600 !important; border: none !important; border-radius: var(--radius-md) !important; box-shadow: 0 4px 15px rgba(82,186,239,0.3) !important; }
         </style>
-        """,
-        unsafe_allow_html=True,
+        """
     )
 
 
-def kpi_card(label: str, value: str, delta: str = "", color: str = "#00D4FF", icon: str = ""):
+def kpi_card(label: str, value: str, delta: str = "", color: str = "#52BAEF", icon: str = ""):
     """Render a styled KPI card."""
     delta_html = ""
     if delta:
         arrow = "↑" if delta.startswith("+") else "↓"
-        clr = "#00E5A0" if delta.startswith("+") else "#FF4B6E"
+        clr = "#10B981" if delta.startswith("+") else "#EF4444"
         delta_html = f'<div style="font-size:0.78rem;color:{clr};margin-top:0.25rem;font-family:var(--font-body)">{arrow} {delta}</div>'
 
     st.markdown(
         f"""
-        <div class="qa-card" style="border-top:3px solid {color}">
-            <div class="qa-card-header">{icon} {label}</div>
+        <div class="udrive-card" style="border-top:3px solid {color}">
+            <div class="udrive-card-header">{icon} {label}</div>
             <div class="score-display" style="color:{color};font-size:2rem">{value}</div>
             {delta_html}
         </div>
