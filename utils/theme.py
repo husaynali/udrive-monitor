@@ -40,7 +40,7 @@ def inject_global_styles():
         section[data-testid="stSidebar"] { display: none !important; }
         header[data-testid="stHeader"] { display: none !important; }
         h1, h2, h3, h4, h5 { font-family: var(--font-display) !important; color: var(--text-primary) !important; font-weight: 600 !important; }
-        .stButton > button { background: linear-gradient(135deg, var(--udrive-primary), var(--udrive-primary-dark)) !important; color: #FFFFFF !important; font-family: var(--font-display) !important; font-weight: 600 !important; border: none !important; border-radius: var(--radius-md) !important; box-shadow: 0 2px 8px rgba(82,186,239,0.25) !important; }
+        .stButton > button { background: linear-gradient(135deg, var(--udrive-primary), var(--udrive-primary-dark) !important; color: #FFFFFF !important; font-family: var(--font-display) !important; font-weight: 600 !important; border: none !important; border-radius: var(--radius-md) !important; box-shadow: 0 2px 8px rgba(82,186,239,0.25) !important; }
         .stButton > button:hover { transform: translateY(-2px) !important; box-shadow: 0 6px 20px rgba(82,186,239,0.35) !important; }
         .stButton > button[kind="secondary"] { background: var(--bg-surface) !important; color: var(--text-primary) !important; border: 1px solid var(--border-medium) !important; box-shadow: none !important; }
         [data-testid="metric-container"] { background: var(--bg-surface) !important; border: 1px solid var(--border-light) !important; border-radius: var(--radius-lg) !important; padding: 1.25rem 1.5rem !important; box-shadow: var(--shadow-sm) !important; }
@@ -75,8 +75,8 @@ def inject_global_styles():
         .page-title { font-family: var(--font-display); font-size: 1.75rem; font-weight: 700; letter-spacing: -0.03em; color: var(--text-primary); margin-bottom: 0.25rem; line-height: 1.2; }
         .page-subtitle { font-family: var(--font-body); font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 1.5rem; }
         .score-display { font-family: var(--font-display); font-size: 2.5rem; font-weight: 700; line-height: 1; }
-        .stProgress > div > div > div { background: linear-gradient(90deg, var(--udrive-primary), var(--udrive-primary-light)) !important; border-radius: 999px !important; }
-        .stFormSubmitButton > button { background: linear-gradient(135deg, var(--udrive-primary), var(--udrive-primary-dark)) !important; color: #FFFFFF !important; font-family: var(--font-display) !important; font-weight: 600 !important; border: none !important; border-radius: var(--radius-md) !important; box-shadow: 0 4px 15px rgba(82,186,239,0.3) !important; }
+        .stProgress > div > div > div { background: linear-gradient(90deg, var(--udrive-primary), var(--udrive-primary-light) !important; border-radius: 999px !important; }
+        .stFormSubmitButton > button { background: linear-gradient(135deg, var(--udrive-primary), var(--udrive-primary-dark) !important; color: #FFFFFF !important; font-family: var(--font-display) !important; font-weight: 600 !important; border: none !important; border-radius: var(--radius-md) !important; box-shadow: 0 4px 15px rgba(82,186,239,0.3) !important; }
         </style>
         """
     )
