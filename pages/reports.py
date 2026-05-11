@@ -190,5 +190,6 @@ def render():
                 st.error(f"⚠️ {len(nogo_df)} No-Go violation(s) on record")
                 st.dataframe(nogo_df, use_container_width=True, hide_index=True)
                 # Export ALL raw data (all columns from database)
+                csv_c = df3[df3["no_go_violation"].notna()].to_csv(index=False).encode("utf-8")
                 st.download_button("⬇️ Download CSV", csv_c, f"compliance_report_{date.today()}.csv", "text/csv")
 
