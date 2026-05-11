@@ -54,8 +54,7 @@ def render_topnav():
         <div class="udrive-topnav">
             <div class="topnav-left">
                 <div class="udrive-logo">
-                    <span style="font-family:'Outfit',sans-serif;font-size:1.5rem;font-weight:800;color:#52BAEF;">Udrive</span>
-                    <span style="font-family:'Outfit',sans-serif;font-size:1.5rem;font-weight:800;color:#F8FAFC;">Pro</span>
+                    <img src="https://udrive.ae/wp-content/uploads/2023/02/Udrive-Logo-White.png" alt="Udrive" style="height:32px;max-height:32px;">
                 </div>
             </div>
             <div class="topnav-center">

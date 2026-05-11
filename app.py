@@ -13,7 +13,7 @@ from components.topnav import render_topnav
 # Page config
 st.set_page_config(
     page_title="Udrive Pro — Performance Management Platform",
-    page_icon="🚗",
+    page_icon="https://udrive.ae/wp-content/uploads/2023/02/cropped-Udrive-Favicon-32x32.png",
     layout="wide",
     initial_sidebar_state="collapsed",
 )
